@@ -1,0 +1,1295 @@
+new MaxClients;
+new NULL_STRING;
+new NULL_VECTOR;
+new TFHoliday_AprilFools;
+new TFHoliday_Birthday;
+new TFHoliday_Christmas;
+new TFHoliday_CommunityUpdate;
+new TFHoliday_EndOfTheLine;
+new TFHoliday_FullMoon;
+new TFHoliday_Halloween;
+new TFHoliday_HalloweenOrFullMoon;
+new TFHoliday_HalloweenOrFullMoonOrValentines;
+new TFHoliday_MeetThePyro;
+new TFHoliday_ValentinesDay;
+public Extension:__ext_core =
+{
+	name = "Core",
+	file = "core",
+	autoload = 0,
+	required = 0,
+};
+public Extension:__ext_sdkhooks =
+{
+	name = "SDKHooks",
+	file = "sdkhooks.ext",
+	autoload = 1,
+	required = 1,
+};
+public Extension:__ext_sdktools =
+{
+	name = "SDKTools",
+	file = "sdktools.ext",
+	autoload = 1,
+	required = 1,
+};
+public Extension:__ext_tf2 =
+{
+	name = "TF2 Tools",
+	file = "game.tf2.ext",
+	autoload = 0,
+	required = 1,
+};
+public Extension:__ext_tf2items =
+{
+	name = "TF2Items",
+	file = "tf2items.ext.2.ep2v",
+	autoload = 0,
+	required = 1,
+};
+public SharedPlugin:__pl_tf2attributes =
+{
+	name = "tf2attributes",
+	file = "tf2attributes.smx",
+	required = 1,
+};
+public PlVers:__version =
+{
+	version = 5,
+	filevers = "1.10.0.6462",
+	date = "03/23/2020",
+	time = "07:45:33"
+};
+public Plugin:myinfo =
+{
+	name = "Be the Small Giant",
+	description = "Mighty robot!",
+	author = "Deathreus, guest6777",
+	version = "1.6.0",
+	url = "https://forums.alliedmods.net/showthread.php?p=2283714"
+};
+new g_var20e8;
+new g_var20ec;
+new g_var1578;
+new g_var9ec;
+new g_vara3c;
+new g_var1574;
+new g_var1570;
+.18612.ToggleSmallGiant(_arg0, _arg1)
+{
+	new var1;
+	if (3640[_arg0] == 3 && _arg1 && _arg1 != 1)
+	{
+		return 1;
+	}
+	new var2;
+	if (3640[_arg0] && _arg1)
+	{
+		return 1;
+	}
+	new var3;
+	if (3640[_arg0] == 4 && _arg1 == 1 && .21960.CheckTheRules(_arg0))
+	{
+		return 1;
+	}
+	if (.22936.IsValidClass(.5400.TF2_GetPlayerClass(_arg0)))
+	{
+		new var4;
+		if (3640[_arg0] && 3640[_arg0] == 1)
+		{
+			new var9 = 1;
+			if (!(IsPlayerAlive(_arg0)))
+			{
+				var9 = 0;
+			}
+			if (!(.21960.CheckTheRules(_arg0)))
+			{
+				var9 = 0;
+			}
+			if (!var9)
+			{
+				3640[_arg0] = 3;
+				return 0;
+			}
+		}
+		new var6;
+		if (_arg1 && (3640[_arg0] && 3640[_arg0] == 2) && .22936.IsValidClass(.5400.TF2_GetPlayerClass(_arg0)))
+		{
+			new var10;
+			.22420.TF2_GetNameOfClass(.5400.TF2_GetPlayerClass(_arg0), var10, 12);
+			new var11;
+			Format(var11, 256, "models/bots/%s_boss/bot_%s_boss.mdl", var10, var10);
+			if (.5400.TF2_GetPlayerClass(_arg0) == 5)
+			{
+				Format(var11, 256, "models/bots/medic/bot_medic.mdl");
+			}
+			if (.5400.TF2_GetPlayerClass(_arg0) == 9)
+			{
+				Format(var11, 256, "models/bots/engineer/bot_engineer.mdl");
+			}
+			if (.5400.TF2_GetPlayerClass(_arg0) == 2)
+			{
+				Format(var11, 256, "models/bots/sniper/bot_sniper.mdl");
+			}
+			if (.5400.TF2_GetPlayerClass(_arg0) == 8)
+			{
+				Format(var11, 256, "models/bots/spy/bot_spy.mdl");
+			}
+			SetVariantString(var11);
+			AcceptEntityInput(_arg0, "SetCustomModel", -1, -1, 0);
+			SetEntProp(_arg0, 0, "m_bUseClassAnimations", 1, 4, 0);
+			3904[_arg0] = GetTickedTime();
+			3640[_arg0] = 4;
+			SetVariantString("1.1");
+			AcceptEntityInput(_arg0, "SetModelScale", -1, -1, 0);
+			new var12;
+			var12 = GetPlayerWeaponSlot(_arg0, 2);
+			TF2Attrib_RemoveByDefIndex(var12, 128);
+			CreateTimer(1028443341, 89, _arg0, 0);
+			CreateTimer(1048576000, 87, _arg0, 0);
+			.25444.SetWearableAlpha(_arg0, 0);
+			SDKHook(_arg0, 2, 81);
+			SetEntProp(_arg0, 0, "m_bIsMiniBoss", 1, 4, 0);
+			g_var20e8 = GetEntPropFloat(_arg0, 1, "m_flStepSoundTime", 0);
+			g_var20ec = GetEntPropFloat(_arg0, 1, "m_flStepSize", 0);
+			SetEntPropFloat(_arg0, 1, "m_flStepSize", g_var20ec * 2.0, 0);
+			SetEntPropFloat(_arg0, 1, "m_flStepSoundTime", g_var20e8 * 1.8, 0);
+		}
+		else
+		{
+			new var8;
+			if (_arg1 && (_arg1 == 2 && 3640[_arg0] == 4))
+			{
+				SetVariantString(8752);
+				AcceptEntityInput(_arg0, "SetCustomModel", -1, -1, 0);
+				3904[_arg0] = GetTickedTime();
+				3640[_arg0] = 0;
+				.25444.SetWearableAlpha(_arg0, 255);
+				.26416.FixSounds(_arg0);
+				SetVariantString("1.0");
+				AcceptEntityInput(_arg0, "SetModelScale", -1, -1, 0);
+				.24792.RemoveAttributes(_arg0);
+				SetEntProp(_arg0, 0, "m_bIsMiniBoss", 0, 4, 0);
+				SDKUnhook(_arg0, 2, 81);
+				TF2_RegeneratePlayer(_arg0);
+				SetEntPropFloat(_arg0, 1, "m_flStepSize", g_var20ec, 0);
+				SetEntPropFloat(_arg0, 1, "m_flStepSoundTime", g_var20e8, 0);
+				TF2_AddCondition(_arg0, 32, 1036831949, 0);
+			}
+		}
+		return 1;
+	}
+	return 0;
+}
+
+.21960.CheckTheRules(_arg0)
+{
+	if (IsPlayerAlive(_arg0))
+	{
+		new var1;
+		if (.5456.TF2_IsPlayerInCondition(_arg0, 7) || .5456.TF2_IsPlayerInCondition(_arg0, 15))
+		{
+			return 0;
+		}
+		new var3;
+		var3 = GetConVarFloat(g_var1578);
+		new var2;
+		if (var3 > 0.0 && 3904[_arg0][var3] > GetTickedTime())
+		{
+			return 0;
+		}
+		return 1;
+	}
+	return 0;
+}
+
+.22420.TF2_GetNameOfClass(_arg0, _arg1, _arg2)
+{
+	switch (_arg0)
+	{
+		case 1:
+		{
+			Format(_arg1, _arg2, "scout");
+		}
+		case 2:
+		{
+			Format(_arg1, _arg2, "sniper");
+		}
+		case 3:
+		{
+			Format(_arg1, _arg2, "soldier");
+		}
+		case 4:
+		{
+			Format(_arg1, _arg2, "demo");
+		}
+		case 5:
+		{
+			Format(_arg1, _arg2, "medic");
+		}
+		case 6:
+		{
+			Format(_arg1, _arg2, "heavy");
+		}
+		case 7:
+		{
+			Format(_arg1, _arg2, "pyro");
+		}
+		case 8:
+		{
+			Format(_arg1, _arg2, "spy");
+		}
+		case 9:
+		{
+			Format(_arg1, _arg2, "engineer");
+		}
+		default:
+		{
+		}
+	}
+	return 0;
+}
+
+.22936.IsValidClass(_arg0)
+{
+	new var1;
+	return _arg0 == 7 || _arg0 == 6 || _arg0 == 3 || _arg0 == 4 || _arg0 == 1 || _arg0 == 5 || _arg0 == 9 || _arg0 == 2 || _arg0 == 8;
+}
+
+.24168.SetAttributes(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5)
+{
+	new var1;
+	var1 = _arg1 - GetEntProp(GetPlayerResourceEntity(), 0, "m_iMaxHealth", 4, _arg0);
+	TF2Attrib_SetByName(_arg0, "damage force reduction", _arg3);
+	TF2Attrib_SetByName(_arg0, "health from packs decreased", 0);
+	TF2Attrib_SetByName(_arg0, "move speed bonus", _arg2);
+	TF2Attrib_SetByName(_arg0, "airblast vulnerability multiplier", _arg4);
+	TF2Attrib_SetByName(_arg0, "max health additive bonus", float(var1));
+	if (_arg5 > 0)
+	{
+		TF2Attrib_SetByName(_arg0, "override footstep sound set", _arg5);
+	}
+	new var2;
+	var2 = GetPlayerWeaponSlot(_arg0, 0);
+	if (.5400.TF2_GetPlayerClass(_arg0) == 6)
+	{
+		TF2Attrib_SetByName(var2, "aiming movespeed increased", 1073741824);
+	}
+	.25964.TF2_SetHealth(_arg0, _arg1);
+	TF2_AddCondition(_arg0, 32, 1036831949, 0);
+	return 0;
+}
+
+.24792.RemoveAttributes(_arg0)
+{
+	TF2Attrib_RemoveByName(_arg0, "damage force reduction");
+	TF2Attrib_RemoveByName(_arg0, "health from packs decreased");
+	TF2Attrib_RemoveByName(_arg0, "move speed bonus");
+	TF2Attrib_RemoveByName(_arg0, "airblast vulnerability multiplier");
+	TF2Attrib_RemoveByName(_arg0, "overheal fill rate reduced");
+	TF2Attrib_RemoveByName(_arg0, "max health additive bonus");
+	TF2Attrib_RemoveByName(_arg0, "override footstep sound set");
+	new var1;
+	var1 = GetPlayerWeaponSlot(_arg0, 0);
+	if (.5400.TF2_GetPlayerClass(_arg0) == 6)
+	{
+		TF2Attrib_RemoveByName(var1, "aiming movespeed increased");
+	}
+	TF2_RegeneratePlayer(_arg0);
+	return 0;
+}
+
+.25188.IsValidClient(_arg0)
+{
+	new var1;
+	if (_arg0 <= 0 || _arg0 > MaxClients || IsClientInGame(_arg0))
+	{
+		return 0;
+	}
+	new var2;
+	if (IsClientSourceTV(_arg0) || IsClientReplay(_arg0))
+	{
+		return 0;
+	}
+	return 1;
+}
+
+.25444.SetWearableAlpha(_arg0, _arg1)
+{
+	new var1 = 0;
+	new var2 = -1;
+	while ((var2 = FindEntityByClassname(var2, "tf_wearable*")) != -1)
+	{
+		new var3 = 0;
+		.4076.GetEntityClassname(var2, var3, 64);
+		if (!(.3264.StrEqual(var3, "tf_wearable_demoshield", 1)))
+		{
+			if (!(GetEntPropEnt(var2, 0, "m_hOwnerEntity", 0) != _arg0))
+			{
+				.4152.SetEntityRenderMode(var2, 1);
+				.4460.SetEntityRenderColor(var2, 255, 255, 255, _arg1);
+				if (!_arg1)
+				{
+					AcceptEntityInput(var2, "Kill", -1, -1, 0);
+				}
+				var1++;
+			}
+		}
+	}
+	return var1;
+}
+
+.25964.TF2_SetHealth(_arg0, _arg1)
+{
+	if (.25188.IsValidClient(_arg0))
+	{
+		SetEntProp(_arg0, 0, "m_iHealth", _arg1, 4, 0);
+		SetEntProp(_arg0, 1, "m_iHealth", _arg1, 4, 0);
+	}
+	return 0;
+}
+
+.26128.UpdatePlayerHitbox(_arg0, _arg1)
+{
+	new var1 = 0;
+	new var2;
+	.3052.ScaleVector(var1, _arg1);
+	.3052.ScaleVector(var2, _arg1);
+	SetEntPropVector(_arg0, 0, "m_vecSpecifiedSurroundingMins", var1, 0);
+	SetEntPropVector(_arg0, 0, "m_vecSpecifiedSurroundingMaxs", var2, 0);
+	return 0;
+}
+
+.26416.FixSounds(_arg0)
+{
+	new var1;
+	if (_arg0 <= 0 || IsValidEntity(_arg0))
+	{
+		return 0;
+	}
+	.26736.StopSnd(_arg0, "mvm/giant_scout/giant_scout_loop.wav", 0);
+	.26736.StopSnd(_arg0, "mvm/giant_soldier/giant_soldier_loop.wav", 0);
+	.26736.StopSnd(_arg0, "mvm/giant_pyro/giant_pyro_loop.wav", 0);
+	.26736.StopSnd(_arg0, "mvm/giant_demoman/giant_demoman_loop.wav", 0);
+	.26736.StopSnd(_arg0, ")mvm/giant_heavy/giant_heavy_loop.wav", 0);
+	return 0;
+}
+
+.26736.StopSnd(_arg0, _arg1, _arg2)
+{
+	if (IsValidEntity(_arg0))
+	{
+		StopSound(_arg0, _arg2, _arg1);
+		return 0;
+	}
+	return 0;
+}
+
+.26828.PrecacheSounds()
+{
+	new var1 = 1;
+	while (var1 < 9)
+	{
+		new var2;
+		Format(var2, 256, "^mvm/giant_common/giant_common_step_0%i.wav", var1);
+		PrecacheSound(var2, 1);
+		var1++;
+	}
+	PrecacheSound("mvm/giant_scout/giant_scout_loop.wav", 1);
+	PrecacheSound("mvm/giant_soldier/giant_soldier_loop.wav", 1);
+	PrecacheSound("mvm/giant_pyro/giant_pyro_loop.wav", 1);
+	PrecacheSound("mvm/giant_demoman/giant_demoman_loop.wav", 1);
+	PrecacheSound(")mvm/giant_heavy/giant_heavy_loop.wav", 1);
+	PrecacheSound(")mvm/giant_heavy/giant_heavy_gunfire.wav", 1);
+	PrecacheSound(")mvm/giant_heavy/giant_heavy_gunspin.wav", 1);
+	PrecacheSound(")mvm/giant_heavy/giant_heavy_gunwindup.wav", 1);
+	PrecacheSound(")mvm/giant_heavy/giant_heavy_gunwinddown.wav", 1);
+	PrecacheSound("^mvm/giant_demoman/giant_demoman_grenade_shoot.wav", 1);
+	PrecacheSound("mvm/giant_soldier/giant_soldier_rocket_shoot.wav", 1);
+	PrecacheSound("mvm/giant_soldier/giant_soldier_rocket_explode.wav", 1);
+	PrecacheSound("^mvm/giant_pyro/giant_pyro_flamethrower_start.wav", 1);
+	PrecacheSound("^mvm/giant_pyro/giant_pyro_flamethrower_loop.wav", 1);
+	PrecacheSound("mvm/giant_common/giant_common_explodes_01.wav", 1);
+	return 0;
+}
+
+.2992.5/0(_arg0, _arg1)
+{
+	return _arg0 / float(_arg1);
+}
+
+.3052.ScaleVector(_arg0, _arg1)
+{
+	_arg0 *= _arg1;
+	_arg0 + 4/* ERROR unknown load Binary */ *= _arg1;
+	_arg0 + 8/* ERROR unknown load Binary */ *= _arg1;
+	return 0;
+}
+
+.3264.StrEqual(_arg0, _arg1, _arg2)
+{
+	return strcmp(_arg0, _arg1, _arg2) == 0;
+}
+
+.3316.ReplyToTargetError(_arg0, _arg1)
+{
+	switch (_arg1)
+	{
+		case -7:
+		{
+			ReplyToCommand(_arg0, 2484, 2492);
+		}
+		case -6:
+		{
+			ReplyToCommand(_arg0, 2456, 2464);
+		}
+		case -5:
+		{
+			ReplyToCommand(_arg0, 2428, 2436);
+		}
+		case -4:
+		{
+			ReplyToCommand(_arg0, 2400, 2408);
+		}
+		case -3:
+		{
+			ReplyToCommand(_arg0, 2368, 2376);
+		}
+		case -2:
+		{
+			ReplyToCommand(_arg0, 2340, 2348);
+		}
+		case -1:
+		{
+			ReplyToCommand(_arg0, 2308, 2316);
+		}
+		case 0:
+		{
+			ReplyToCommand(_arg0, 2280, 2288);
+		}
+		default:
+		{
+		}
+	}
+	return 0;
+}
+
+.3780.GetEntSendPropOffs(_arg0, _arg1, _arg2)
+{
+	new var1 = 0;
+	if (GetEntityNetClass(_arg0, var1, NULL_STRING))
+	{
+		new var2 = -1;
+		new var3;
+		var3 = FindSendPropInfo(var1, _arg1, 0, 0, var2);
+		if (_arg2)
+		{
+			return var3;
+		}
+		return var2;
+	}
+	return -1;
+}
+
+.4076.GetEntityClassname(_arg0, _arg1, _arg2)
+{
+	return !!GetEntPropString(_arg0, 1, 2524, _arg1, _arg2, 0);
+}
+
+.4152.SetEntityRenderMode(_arg0, _arg1)
+{
+	if (!g_var9ec)
+	{
+		new var1;
+		var1 = GameData.GameData(2576);
+		new var2;
+		var2 = GameData.GetKeyValue(var1, 2588, 2544, 32);
+		CloseHandle(var1);
+		var1 = 0;
+		if (!var2)
+		{
+			strcopy(2544, 32, 2604);
+		}
+		g_var9ec = 1;
+	}
+	SetEntProp(_arg0, 0, 2544, _arg1, 1, 0);
+	return 0;
+}
+
+.4460.SetEntityRenderColor(_arg0, _arg1, _arg2, _arg3, _arg4)
+{
+	if (!g_vara3c)
+	{
+		new var1;
+		var1 = GameData.GameData(2656);
+		new var2;
+		var2 = GameData.GetKeyValue(var1, 2668, 2624, 32);
+		CloseHandle(var1);
+		var1 = 0;
+		if (!var2)
+		{
+			strcopy(2624, 32, 2680);
+		}
+		g_vara3c = 1;
+	}
+	new var3;
+	var3 = .3780.GetEntSendPropOffs(_arg0, 2624, 0);
+	if (0 >= var3)
+	{
+		ThrowError(2692);
+	}
+	SetEntData(_arg0, var3, _arg1, 1, 1);
+	SetEntData(_arg0, var3 + 1, _arg2, 1, 1);
+	SetEntData(_arg0, var3 + 2, _arg3, 1, 1);
+	SetEntData(_arg0, var3 + 3, _arg4, 1, 1);
+	return 0;
+}
+
+.5064.EmitSoundToAll(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7, _arg8, _arg9, _arg10, _arg11)
+{
+
+/* ERROR! null */
+ function ".5064.EmitSoundToAll" (number 21)
+.5400.TF2_GetPlayerClass(_arg0)
+{
+	return GetEntProp(_arg0, 0, 3212, 4, 0);
+}
+
+.5456.TF2_IsPlayerInCondition(_arg0, _arg1)
+{
+	new var1;
+	var1 = _arg1;
+	switch (var1 / 32)
+	{
+		case 0:
+		{
+			new var6;
+			var6 = 1 << var1;
+			if (var6 == var6 & GetEntProp(_arg0, 0, 3224, 4, 0))
+			{
+				return 1;
+			}
+			if (var6 == var6 & GetEntProp(_arg0, 0, 3240, 4, 0))
+			{
+				return 1;
+			}
+		}
+		case 1:
+		{
+			new var5;
+			var5 = 1 << var1 + -32;
+			if (var5 == var5 & GetEntProp(_arg0, 0, 3256, 4, 0))
+			{
+				return 1;
+			}
+		}
+		case 2:
+		{
+			new var4;
+			var4 = 1 << var1 + -64;
+			if (var4 == var4 & GetEntProp(_arg0, 0, 3272, 4, 0))
+			{
+				return 1;
+			}
+		}
+		case 3:
+		{
+			new var3;
+			var3 = 1 << var1 + -96;
+			if (var3 == var3 & GetEntProp(_arg0, 0, 3292, 4, 0))
+			{
+				return 1;
+			}
+		}
+		case 4:
+		{
+			new var2;
+			var2 = 1 << var1 + -128;
+			if (var2 == var2 & GetEntProp(_arg0, 0, 3312, 4, 0))
+			{
+				return 1;
+			}
+		}
+		default:
+		{
+			ThrowError(3332, var1);
+		}
+	}
+	return 0;
+}
+
+public Command_SmallGiant(_arg0, _arg1)
+{
+	new var1;
+	if (_arg0 && _arg1)
+	{
+		new var6 = 0;
+		GetCmdArg(0, var6, 24);
+		ReplyToCommand(_arg0, "[SM] Usage: %s <name|#userid> [1/0] - Transforms a player into a small giant robot.", var6);
+		return 3;
+	}
+	new var7 = 0;
+	new var8 = 0;
+	new var9 = 2;
+	new var2;
+	if (_arg1 > 1 && CheckCommandAccess(_arg0, "smallgiant_admin", "lamethrower_loop.wav", 0))
+	{
+		ReplyToCommand(_arg0, "[SM] You don't have access to targeting others.");
+		return 3;
+	}
+	GetCmdArg(1, var7, NULL_STRING);
+	if (_arg1 > 1)
+	{
+		GetCmdArg(2, var8, 4);
+		var9 = StringToInt(var8, 10);
+	}
+	if (!(_arg1 < 1))
+	{
+	}
+	new var10 = 0;
+	new var11 = 0;
+	new var12 = 0;
+	new var3;
+	if (_arg1 < 1)
+	{
+		var3 = 9;
+	}
+	else
+	{
+		var3 = 1;
+	}
+
+/* ERROR! lysis.nodes.types.DConstant cannot be cast to lysis.nodes.types.DDeclareLocal */
+ function "Command_SmallGiant" (number 24)
+public Event_Inventory(_arg0)
+{
+	new var1;
+	var1 = GetClientOfUserId(GetEventInt(_arg0, "userid", 0));
+	if (3640[var1] == 4)
+	{
+		new var2;
+		var2 = GetConVarFloat(g_var1578);
+		new var3 = 0;
+		if (3904[var1][var2] <= GetTickedTime())
+		{
+			var3 = 1;
+		}
+		.18612.ToggleSmallGiant(var1, 0);
+		if (var3)
+		{
+			3904[var1] = 0;
+		}
+		.18612.ToggleSmallGiant(var1, 1);
+	}
+	return 0;
+}
+
+public Filter_Robots(_arg0, _arg1)
+{
+	new var1 = 1;
+	while (var1 <= MaxClients)
+	{
+		if (.25188.IsValidClient(var1))
+		{
+			if (3640[var1] == 4)
+			{
+				PushArrayCell(_arg1, var1);
+			}
+		}
+		var1++;
+	}
+	return 1;
+}
+
+public Listener_taunt(_arg0)
+{
+	new var1;
+	if (3640[_arg0] == 4 && GetConVarBool(g_var1574))
+	{
+		return 3;
+	}
+	return 0;
+}
+
+public OnClientConnected(_arg0)
+{
+	3904[_arg0] = 0;
+	4168[_arg0] = 0;
+	4432[_arg0] = 0;
+	4696[_arg0] = 0;
+	4960[_arg0] = 0;
+	5224[_arg0] = 0;
+	.26416.FixSounds(_arg0);
+	return 0;
+}
+
+public OnClientDisconnect(_arg0)
+{
+	3904[_arg0] = 0;
+	4168[_arg0] = 0;
+	4432[_arg0] = 0;
+	4696[_arg0] = 0;
+	4960[_arg0] = 0;
+	5224[_arg0] = 0;
+	.26416.FixSounds(_arg0);
+	return 0;
+}
+
+public OnCvarChanged(_arg0, _arg1, _arg2)
+{
+	if (StringToInt(_arg2, 10))
+	{
+		.26828.PrecacheSounds();
+	}
+	return 0;
+}
+
+public OnEntityCreated(_arg0, _arg1)
+{
+	if (.3264.StrEqual(_arg1, "tf_projectile_pipe", 1))
+	{
+		SDKHook(_arg0, 7, 71);
+	}
+	if (.3264.StrEqual(_arg1, "tf_projectile_rocket", 1))
+	{
+		SDKHook(_arg0, 7, 79);
+	}
+	return 0;
+}
+
+public OnEntityDestroyed(_arg0)
+{
+	new var3;
+	new var2;
+	if (.4076.GetEntityClassname(_arg0, var3, 96) && (strcmp(var3, "tf_projectile_pipe", 1) && strcmp(var3, "tf_projectile_rocket", 1)))
+	{
+		new var4;
+		var4 = GetEntPropEnt(_arg0, 0, "m_hOriginalLauncher", 0);
+		if (.25188.IsValidClient(var4))
+		{
+			if (3640[var4] == 4)
+			{
+				.5064.EmitSoundToAll("mvm/giant_soldier/giant_soldier_rocket_explode.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+			}
+		}
+	}
+	return 0;
+}
+
+public OnMapEnd()
+{
+	new var1 = 1;
+	while (var1 <= MaxClients)
+	{
+		3640[var1] = 0;
+		3904[var1] = 0;
+		4168[var1] = 0;
+		4432[var1] = 0;
+		4696[var1] = 0;
+		4960[var1] = 0;
+		5224[var1] = 0;
+		.26416.FixSounds(var1);
+		var1++;
+	}
+	return 0;
+}
+
+public OnMapStart()
+{
+	new var1 = 0;
+	new var2 = 0;
+	new var3 = 1;
+	while (var3 <= 9)
+	{
+		.22420.TF2_GetNameOfClass(var3, var2, 256);
+		Format(var1, 256, "models/bots/%s_boss/bot_%s_boss.mdl", var2, var2);
+		PrecacheModel(var1, 1);
+		var3++;
+	}
+	.26828.PrecacheSounds();
+	return 0;
+}
+
+public OnPipeCreated(_arg0)
+{
+	new var2;
+	var2 = GetEntPropEnt(_arg0, 0, "m_hOwnerEntity", 0);
+	new var1;
+	if (.25188.IsValidClient(var2) && 3640[var2] == 4)
+	{
+		.5064.EmitSoundToAll("^mvm/giant_demoman/giant_demoman_grenade_shoot.wav", var2, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+	}
+	return 0;
+}
+
+public OnPlayerDeath(_arg0)
+{
+	new var1;
+	var1 = GetClientOfUserId(GetEventInt(_arg0, "userid", 0));
+	if (3640[var1])
+	{
+		.26416.FixSounds(var1);
+		.26128.UpdatePlayerHitbox(var1, 1065353216);
+		.5064.EmitSoundToAll("mvm/giant_common/giant_common_explodes_01.wav", var1, 0, 65, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+	}
+	return 0;
+}
+
+public OnPlayerRunCmd(_arg0)
+{
+	new var1;
+	if (.25188.IsValidClient(_arg0) && 3640[_arg0] == 4)
+	{
+		new var8;
+		var8 = .5400.TF2_GetPlayerClass(_arg0);
+		new var2;
+		if (var8 == 6 || var8 == 7)
+		{
+			new var9;
+			var9 = GetPlayerWeaponSlot(_arg0, 0);
+			if (IsValidEntity(var9))
+			{
+				new var10;
+				var10 = GetEntProp(var9, 0, "m_iWeaponState", 4, 0);
+				if (var8 == 6)
+				{
+					new var3;
+					if (var10 == 1 && 4432[_arg0])
+					{
+						.5064.EmitSoundToAll(")mvm/giant_heavy/giant_heavy_gunwindup.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+						4432[_arg0] = 1;
+						4696[_arg0] = 0;
+						4960[_arg0] = 0;
+						5224[_arg0] = 1;
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunspin.wav");
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunfire.wav");
+					}
+					new var4;
+					if (var10 == 2 && 4696[_arg0])
+					{
+						.5064.EmitSoundToAll(")mvm/giant_heavy/giant_heavy_gunfire.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+						4696[_arg0] = 1;
+						4432[_arg0] = 1;
+						4960[_arg0] = 0;
+						5224[_arg0] = 1;
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunspin.wav");
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunwindup.wav");
+					}
+					new var5;
+					if (var10 == 3 && 4960[_arg0])
+					{
+						.5064.EmitSoundToAll(")mvm/giant_heavy/giant_heavy_gunspin.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+						4960[_arg0] = 1;
+						4432[_arg0] = 1;
+						4696[_arg0] = 0;
+						5224[_arg0] = 1;
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunfire.wav");
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunwindup.wav");
+					}
+					if (!var10)
+					{
+						if (5224[_arg0])
+						{
+							.5064.EmitSoundToAll(")mvm/giant_heavy/giant_heavy_gunwinddown.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+							5224[_arg0] = 0;
+						}
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunspin.wav");
+						StopSound(_arg0, 1, ")mvm/giant_heavy/giant_heavy_gunfire.wav");
+						4432[_arg0] = 0;
+						4696[_arg0] = 0;
+						4960[_arg0] = 0;
+					}
+				}
+				if (var8 == 7)
+				{
+					new var6;
+					if (var10 == 1 && 4432[_arg0])
+					{
+						.5064.EmitSoundToAll("^mvm/giant_pyro/giant_pyro_flamethrower_start.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+						4432[_arg0] = 1;
+						4696[_arg0] = 0;
+						StopSound(_arg0, 1, "^mvm/giant_pyro/giant_pyro_flamethrower_loop.wav");
+					}
+					new var7;
+					if (var10 == 2 && 4696[_arg0])
+					{
+						.5064.EmitSoundToAll("^mvm/giant_pyro/giant_pyro_flamethrower_loop.wav", _arg0, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+						4696[_arg0] = 1;
+						4432[_arg0] = 1;
+						StopSound(_arg0, 1, "^mvm/giant_pyro/giant_pyro_flamethrower_start.wav");
+					}
+					if (!var10)
+					{
+						4432[_arg0] = 0;
+						4696[_arg0] = 0;
+						StopSound(_arg0, 1, "^mvm/giant_pyro/giant_pyro_flamethrower_loop.wav");
+						StopSound(_arg0, 1, "^mvm/giant_pyro/giant_pyro_flamethrower_start.wav");
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+public OnPluginStart()
+{
+	RegAdminCmd("sm_smallgiant", 49, 2, 5516, 5520, 0);
+	RegAdminCmd("sm_smallgiantrobot", 49, 2, 5516, 5520, 0);
+	AddCommandListener(55, "taunt");
+	AddCommandListener(55, "+taunt");
+	AddNormalSoundHook(83);
+	HookEvent("post_inventory_application", 51, 1);
+	HookEvent("player_death", 73, 1);
+	LoadTranslations("common.phrases");
+	LoadTranslations("core.phrases");
+	CreateConVar("sm_bethesmallgiant_version", "1.6.0", "Plugin version.", 139584, 0, 0, 0, 0);
+	g_var1570 = CreateConVar("sm_bethesmallgiant_sounds", "1", "If on, robots will emit robotic class sounds instead of their usual sounds.", 0, 1, 0, 1, 1065353216);
+	g_var1574 = CreateConVar("sm_bethesmallgiant_taunts", "1", "If on, robots can taunt. Most robot taunts are...incorrect. And some taunt kills don't play an animation for the killing part.", 0, 1, 0, 1, 1065353216);
+	g_var1578 = CreateConVar("sm_bethesmallgiant_cooldown", "2.0", "If greater than 0, players must wait this long between enabling/disabling robot on themselves. Set to 0.0 to disable.", 0, 1, 0, 0, 0);
+	CreateTimer(1056964608, 85, 0, 3);
+	return 0;
+}
+
+public OnRocketCreated(_arg0)
+{
+	new var2;
+	var2 = GetEntPropEnt(_arg0, 0, "m_hOwnerEntity", 0);
+	new var1;
+	if (.25188.IsValidClient(var2) && 3640[var2] == 4)
+	{
+		.5064.EmitSoundToAll("mvm/giant_soldier/giant_soldier_rocket_shoot.wav", var2, 1, 75, 0, 1065353216, 100, -1, 52, 52, 1, 0);
+	}
+	return 0;
+}
+
+public OnTakeDamage(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7, _arg8)
+{
+	new var1;
+	if (3640[_arg0] == 4 && _arg8 == 2)
+	{
+		_arg3 = .2992.5/0(float(GetEntProp(GetPlayerResourceEntity(), 0, "m_iMaxHealth", 4, _arg0)), 8);
+		return 1;
+	}
+	return 0;
+}
+
+public SoundHook(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7)
+{
+	new var1;
+	if (GetConVarBool(g_var1570) && IsValidEntity(_arg3))
+	{
+		return 0;
+	}
+	new var10;
+	.4076.GetEntityClassname(_arg3, var10, 96);
+	new var2;
+	if (strcmp(var10, "tf_projectile_pipe", 1) && strcmp(var10, "tf_projectile_rocket", 1))
+	{
+		new var11;
+		var11 = GetEntPropEnt(_arg3, 0, "m_hOriginalLauncher", 0);
+		new var3;
+		if (.25188.IsValidClient(var11) && 3640[var11] == 4)
+		{
+			return 0;
+		}
+		new var4;
+		if (StrContains(_arg2, ")weapons/pipe_bomb", 0) == -1 && StrContains(_arg2, ")weapons/explode", 0) == -1)
+		{
+			return 4;
+		}
+	}
+	new var5;
+	if (strcmp(var10, "tf_weapon_grenadelauncher", 1) && strcmp(var10, "tf_weapon_rocketlauncher", 1))
+	{
+		new var12;
+		var12 = GetEntPropEnt(_arg3, 0, "m_hOwnerEntity", 0);
+		new var6;
+		if (.25188.IsValidClient(var12) && 3640[var12] == 4)
+		{
+			return 0;
+		}
+		new var7;
+		if (StrContains(_arg2, ")weapons/grenade_launcher_shoot", 0) == -1 && StrContains(_arg2, ")weapons/rocket_shoot", 0) == -1)
+		{
+			return 4;
+		}
+	}
+	new var13;
+	var13 = _arg3;
+	new var8;
+	if (.25188.IsValidClient(var13) && 3640[var13] == 4)
+	{
+		return 0;
+	}
+	if (StrContains(_arg2, "weapons/fx/rics/arrow_impact_flesh", 0) != -1)
+	{
+		Format(_arg2, 256, "weapons/fx/rics/arrow_impact_metal%i.wav", GetRandomInt(2, 4));
+		_arg7 = GetRandomInt(90, 100);
+		.5064.EmitSoundToAll(_arg2, var13, 6, 120, 1, 1062836634, _arg7, -1, 52, 52, 1, 0);
+		return 4;
+	}
+	if (StrContains(_arg2, "physics/flesh/flesh_impact_bullet", 0) != -1)
+	{
+		Format(_arg2, 256, "physics/metal/metal_solid_impact_bullet%i.wav", GetRandomInt(1, 4));
+		_arg7 = GetRandomInt(95, 100);
+		.5064.EmitSoundToAll(_arg2, var13, 6, 95, 1, 1061158912, _arg7, -1, 52, 52, 1, 0);
+		return 4;
+	}
+	new var9;
+	if (StrContains(_arg2, "vo/", 0) == -1 || StrContains(_arg2, "announcer", 0) == -1)
+	{
+		return 0;
+	}
+	ReplaceString(_arg2, 256, "vo/", "vo/mvm/norm/", 0);
+	ReplaceString(_arg2, 256, ".wav", ".mp3", 0);
+	new var14 = 0;
+	new var15 = 0;
+	.22420.TF2_GetNameOfClass(.5400.TF2_GetPlayerClass(var13), var15, 12);
+	ReplaceString(var15, 12, "demo", "demoman", 1);
+	Format(var14, 12, "%s_mvm", var15);
+	ReplaceString(_arg2, 256, var15, var14, 0);
+	PrecacheSound(_arg2, 0);
+	return 1;
+}
+
+public Timer_HalfSecond()
+{
+	new var1 = 1;
+	while (var1 <= MaxClients)
+	{
+		if (.25188.IsValidClient(var1))
+		{
+			if (3640[var1] == 3)
+			{
+				.18612.ToggleSmallGiant(var1, 1);
+			}
+			else
+			{
+				if (3640[var1] != 4)
+				{
+					.26416.FixSounds(var1);
+				}
+			}
+		}
+		var1++;
+	}
+	return 0;
+}
+
+public Timer_ModifyItems(_arg0, _arg1)
+{
+	switch (.5400.TF2_GetPlayerClass(_arg1))
+	{
+		case 1:
+		{
+			.24168.SetAttributes(_arg1, 1600, 1065353216, 1060320051, 1060320051, 1084227584);
+		}
+		case 2:
+		{
+			.24168.SetAttributes(_arg1, 1600, 1056964608, 1058642330, 1058642330, 0);
+		}
+		case 3:
+		{
+			.24168.SetAttributes(_arg1, 3800, 1056964608, 1053609165, 1053609165, 1077936128);
+		}
+		case 4:
+		{
+			.24168.SetAttributes(_arg1, 3300, 1056964608, 1056964608, 1056964608, 1082130432);
+		}
+		case 5:
+		{
+			.24168.SetAttributes(_arg1, 2500, 1056964608, 1058642330, 1058642330, 0);
+		}
+		case 6:
+		{
+			.24168.SetAttributes(_arg1, 5000, 1056964608, 1050253722, 1050253722, 1073741824);
+		}
+		case 7:
+		{
+			.24168.SetAttributes(_arg1, 3000, 1056964608, 1058642330, 1058642330, 1086324736);
+		}
+		case 8:
+		{
+			.24168.SetAttributes(_arg1, 1600, 1056964608, 1058642330, 1058642330, 0);
+		}
+		case 9:
+		{
+			.24168.SetAttributes(_arg1, 1800, 1056964608, 1058642330, 1058642330, 0);
+		}
+		default:
+		{
+		}
+	}
+	return 0;
+}
+
+public Timer_OnPlayerBecomeSmallGiant(_arg0, _arg1)
+{
+	new var1;
+	if (3640[_arg1] == 4 && GetConVarBool(g_var1570) && .25188.IsValidClient(_arg1))
+	{
+		return 4;
+	}
+	SetEntPropFloat(_arg1, 0, "m_flModelScale", 1066192077, 0);
+	.26128.UpdatePlayerHitbox(_arg1, 1066192077);
+	new var2;
+	var2 = .5400.TF2_GetPlayerClass(_arg1);
+	switch (var2)
+	{
+		case 1, 2:
+		{
+			.5064.EmitSoundToAll("mvm/giant_scout/giant_scout_loop.wav", _arg1, 0, 65, 1, 1055286886, 100, -1, 52, 52, 1, 0);
+		}
+		case 3, 5:
+		{
+			.5064.EmitSoundToAll("mvm/giant_soldier/giant_soldier_loop.wav", _arg1, 0, 65, 1, 1055286886, 100, -1, 52, 52, 1, 0);
+		}
+		case 4, 9:
+		{
+			.5064.EmitSoundToAll("mvm/giant_demoman/giant_demoman_loop.wav", _arg1, 0, 65, 1, 1055286886, 100, -1, 52, 52, 1, 0);
+		}
+		case 6:
+		{
+			.5064.EmitSoundToAll(")mvm/giant_heavy/giant_heavy_loop.wav", _arg1, 0, 65, 1, 1055286886, 100, -1, 52, 52, 1, 0);
+		}
+		case 7, 8:
+		{
+			.5064.EmitSoundToAll("mvm/giant_pyro/giant_pyro_loop.wav", _arg1, 0, 65, 1, 1055286886, 100, -1, 52, 52, 1, 0);
+		}
+		default:
+		{
+		}
+	}
+	return 3;
+}
+
+public __ext_core_SetNTVOptional()
+{
+	MarkNativeAsOptional(100);
+	MarkNativeAsOptional(120);
+	MarkNativeAsOptional(136);
+	MarkNativeAsOptional(156);
+	MarkNativeAsOptional(180);
+	MarkNativeAsOptional(192);
+	MarkNativeAsOptional(204);
+	MarkNativeAsOptional(216);
+	MarkNativeAsOptional(232);
+	MarkNativeAsOptional(244);
+	MarkNativeAsOptional(256);
+	MarkNativeAsOptional(272);
+	MarkNativeAsOptional(288);
+	MarkNativeAsOptional(304);
+	MarkNativeAsOptional(320);
+	MarkNativeAsOptional(336);
+	MarkNativeAsOptional(352);
+	MarkNativeAsOptional(372);
+	MarkNativeAsOptional(388);
+	MarkNativeAsOptional(400);
+	MarkNativeAsOptional(412);
+	MarkNativeAsOptional(424);
+	MarkNativeAsOptional(436);
+	MarkNativeAsOptional(448);
+	MarkNativeAsOptional(460);
+	MarkNativeAsOptional(472);
+	MarkNativeAsOptional(488);
+	MarkNativeAsOptional(504);
+	MarkNativeAsOptional(516);
+	MarkNativeAsOptional(528);
+	MarkNativeAsOptional(544);
+	MarkNativeAsOptional(560);
+	MarkNativeAsOptional(576);
+	MarkNativeAsOptional(596);
+	MarkNativeAsOptional(616);
+	MarkNativeAsOptional(636);
+	MarkNativeAsOptional(656);
+	MarkNativeAsOptional(676);
+	MarkNativeAsOptional(696);
+	MarkNativeAsOptional(716);
+	MarkNativeAsOptional(736);
+	MarkNativeAsOptional(756);
+	MarkNativeAsOptional(776);
+	MarkNativeAsOptional(796);
+	MarkNativeAsOptional(816);
+	MarkNativeAsOptional(840);
+	MarkNativeAsOptional(864);
+	MarkNativeAsOptional(884);
+	MarkNativeAsOptional(900);
+	MarkNativeAsOptional(916);
+	MarkNativeAsOptional(932);
+	MarkNativeAsOptional(952);
+	MarkNativeAsOptional(968);
+	MarkNativeAsOptional(984);
+	MarkNativeAsOptional(1004);
+	MarkNativeAsOptional(1024);
+	MarkNativeAsOptional(1044);
+	MarkNativeAsOptional(1064);
+	MarkNativeAsOptional(1084);
+	MarkNativeAsOptional(1104);
+	MarkNativeAsOptional(1128);
+	MarkNativeAsOptional(1148);
+	MarkNativeAsOptional(1172);
+	MarkNativeAsOptional(1184);
+	MarkNativeAsOptional(1196);
+	MarkNativeAsOptional(1208);
+	MarkNativeAsOptional(1224);
+	MarkNativeAsOptional(1236);
+	MarkNativeAsOptional(1248);
+	MarkNativeAsOptional(1264);
+	MarkNativeAsOptional(1280);
+	MarkNativeAsOptional(1304);
+	MarkNativeAsOptional(1316);
+	MarkNativeAsOptional(1328);
+	MarkNativeAsOptional(1340);
+	MarkNativeAsOptional(1352);
+	MarkNativeAsOptional(1364);
+	MarkNativeAsOptional(1376);
+	MarkNativeAsOptional(1388);
+	MarkNativeAsOptional(1404);
+	MarkNativeAsOptional(1416);
+	MarkNativeAsOptional(1428);
+	MarkNativeAsOptional(1440);
+	MarkNativeAsOptional(1452);
+	MarkNativeAsOptional(1464);
+	MarkNativeAsOptional(1476);
+	MarkNativeAsOptional(1488);
+	MarkNativeAsOptional(1504);
+	MarkNativeAsOptional(1532);
+	MarkNativeAsOptional(1548);
+	MarkNativeAsOptional(1572);
+	MarkNativeAsOptional(1588);
+	MarkNativeAsOptional(1608);
+	MarkNativeAsOptional(1628);
+	MarkNativeAsOptional(1648);
+	MarkNativeAsOptional(1668);
+	MarkNativeAsOptional(1688);
+	MarkNativeAsOptional(1708);
+	MarkNativeAsOptional(1728);
+	MarkNativeAsOptional(1748);
+	MarkNativeAsOptional(1772);
+	MarkNativeAsOptional(1804);
+	MarkNativeAsOptional(1820);
+	MarkNativeAsOptional(1840);
+	MarkNativeAsOptional(1860);
+	MarkNativeAsOptional(1880);
+	MarkNativeAsOptional(1900);
+	MarkNativeAsOptional(1920);
+	MarkNativeAsOptional(1940);
+	MarkNativeAsOptional(1960);
+	MarkNativeAsOptional(1984);
+	MarkNativeAsOptional(2000);
+	MarkNativeAsOptional(2020);
+	MarkNativeAsOptional(2040);
+	MarkNativeAsOptional(2060);
+	MarkNativeAsOptional(2080);
+	MarkNativeAsOptional(2100);
+	MarkNativeAsOptional(2120);
+	MarkNativeAsOptional(2140);
+	MarkNativeAsOptional(2164);
+	MarkNativeAsOptional(2200);
+	MarkNativeAsOptional(2224);
+	MarkNativeAsOptional(2256);
+	VerifyCoreVersion();
+	return 0;
+}
+
